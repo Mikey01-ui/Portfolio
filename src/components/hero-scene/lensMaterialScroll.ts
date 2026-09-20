@@ -52,8 +52,18 @@ export function applyLensMaterialScrollBoost(progress: number): void {
     } else if (isMetal) {
       material.envMapIntensity = lerp(entry.baseEnv, 2.2, t);
       material.roughness = lerp(entry.baseRoughness, 0.12, t);
+      if (t > 0.62) {
+        const fade = smoothStep((t - 0.62) / 0.38);
+        material.transparent = true;
+        material.opacity = lerp(entry.baseOpacity, 0, fade);
+      }
     } else {
       material.envMapIntensity = lerp(entry.baseEnv, 1.25, t);
+      if (t > 0.62) {
+        const fade = smoothStep((t - 0.62) / 0.38);
+        material.transparent = true;
+        material.opacity = lerp(entry.baseOpacity, 0, fade);
+      }
     }
 
     material.needsUpdate = true;

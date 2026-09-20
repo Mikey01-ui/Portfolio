@@ -10,10 +10,12 @@ import {
   MODEL_COMPOSITION_OFFSET,
   PRESENTATION_REVEAL,
 } from "@/components/hero-scene/constants";
+import { resetSubjectDropTransform } from "@/hooks/heroPresentation/dropBounce";
 import {
   addCameraDropPhase,
   addSlideAndTitlePhase,
 } from "@/hooks/heroPresentation/phases";
+import { CAMERA_DROP_ANIMATION } from "@/components/hero-scene/constants";
 
 gsap.registerPlugin(useGSAP);
 
@@ -50,7 +52,7 @@ export function useHeroPresentationTimeline({
         defaults: { ease: "none" },
         onUpdate: () => invalidate(),
         onComplete: () => {
-          subject.position.y = 0;
+          resetSubjectDropTransform(subject, CAMERA_DROP_ANIMATION.restY);
           stage.position.x = stageEndX;
           invalidate();
         },

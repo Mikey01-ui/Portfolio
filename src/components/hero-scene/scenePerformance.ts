@@ -10,7 +10,7 @@ export const SCENE_PERFORMANCE = {
   /** Dynamic shadow maps + this mesh = stutter. ContactShadows only. */
   enableDirectionalShadows: false,
   /** Low-res HDR probe — enough for metal/glass highlights. */
-  environmentResolution: 128,
+  environmentResolution: 256,
   contactShadowResolution: 256,
   /** Skip expensive transmission shader on lens glass. */
   useCheapLensMaterial: true,

@@ -14,7 +14,10 @@ import {
   isHeroScrollRigBridgeReady,
 } from "@/components/hero-scene/heroScrollRigBridge";
 import { applyLensMaterialScrollBoost } from "@/components/hero-scene/lensMaterialScroll";
-import { getCameraDistanceToFitLensPortal } from "@/components/hero-scene/lensPortalCamera";
+import {
+  getCameraDistanceToFillLensPortal,
+  getCameraDistanceToFitLensPortal,
+} from "@/components/hero-scene/lensPortalCamera";
 import { getLensTransitionScrollEnd } from "@/components/hero-scene/lensScrollDistance";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -140,15 +143,34 @@ export function useHeroLensTransitionScroll({
             ? window.innerWidth / Math.max(window.innerHeight, 1)
             : 16 / 9;
         const endFov = zoomIntoLens.cameraFov;
+        const portalW = heroScrollRigBridge.lensPortalWidth;
+        const portalH = heroScrollRigBridge.lensPortalHeight;
         const fitDistance = getCameraDistanceToFitLensPortal(
           endFov,
           viewportAspect,
-          heroScrollRigBridge.lensPortalWidth,
-          heroScrollRigBridge.lensPortalHeight,
+          portalW,
+          portalH,
+        );
+        const fillDistance = getCameraDistanceToFillLensPortal(
+          endFov,
+          viewportAspect,
+          portalW,
+          portalH,
         );
 
+        const fillStartT = LENS_TRANSITION.zoomIntoLens.fillStartT;
+        let distance: number;
+        if (zoomT <= fillStartT) {
+          const u = smoothStep(zoomT / Math.max(fillStartT, 0.001));
+          distance = lerp(faceLens.cameraDistance, fitDistance, u);
+        } else {
+          const u = smoothStep(
+            (zoomT - fillStartT) / Math.max(1 - fillStartT, 0.001),
+          );
+          distance = lerp(fitDistance, fillDistance, u);
+        }
+
         /** Lens axis is world +Z once the rig reaches `lensFacingYaw`. */
-        const distance = lerp(faceLens.cameraDistance, fitDistance, zoomT);
         const offsetY = lerp(
           faceLens.cameraOffsetY,
           zoomIntoLens.cameraOffsetY,

@@ -1,6 +1,6 @@
-# NANAGANABA
+# Portfolio
 
-Scroll-driven cinematic hero: vintage 3D movie camera, GSAP scroll, lens zoom sequence.
+Cinematic 3D hero — vintage camera drop, **YO** title, scroll-driven lens zoom ending on **IM MILTON**.
 
 Built with Next.js, React Three Fiber, and GSAP.
 
@@ -15,7 +15,7 @@ Open [http://localhost:3000](http://localhost:3000) (same experience at `/hero-s
 
 ## Deploy
 
-Connect this repo to [Vercel](https://vercel.com) with the default Next.js settings. Node **22.x** (see `.nvmrc`).
+Connect to [Vercel](https://vercel.com) with default Next.js settings. Node **22.x** (see `.nvmrc`).
 
 ## License
 

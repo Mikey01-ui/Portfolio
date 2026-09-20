@@ -49,9 +49,17 @@ export const MODEL_TARGET_HEIGHT = 1.62;
  * The web GLB merges meshes by material, so the lens can't be found by name —
  * these are measured against the normalized bounding box instead.
  */
-/** Image shown inside the lens / matte-box opening. */
+/** Screen inside the lens / matte-box opening (canvas texture). */
 export const LENS_PORTAL = {
-  imagePath: "/images/lens-portal/film-set-01.png",
+  label: "IM MILTON",
+  background: "#000000",
+  textColor: "#f4f6fb",
+  fontFamily: "Montserrat, sans-serif",
+  fontWeight: 700,
+  canvasWidth: 1024,
+  canvasHeight: 682,
+  /** Supersample canvas texture for sharp text when dolly fills the screen. */
+  textureScale: 3,
 } as const;
 
 /**
@@ -82,7 +90,7 @@ export const LENS_PHOTO = {
 /** Lift subject slightly above frame center — floating in void. */
 export const MODEL_COMPOSITION_OFFSET = [0, 0.22, 0] as const;
 
-export const COMPANY_TITLE = "NANAGANABA";
+export const COMPANY_TITLE = "YO";
 
 /** Light rays (React Bits / OGL) — top-right column, locked on NANAGANABA. */
 export const TITLE_LIGHT_RAYS = {
@@ -104,6 +112,14 @@ export const TITLE_LIGHT_RAYS = {
 export const CAMERA_DROP_ANIMATION = {
   restY: 0,
   startY: 3.75,
+  /** Drop from above — lands at restY, then three diminishing bounces. */
+  fallDuration: 0.96,
+  bounces: [
+    { peak: 0.058, riseDuration: 0.34, fallDuration: 0.3 },
+    { peak: 0.019, riseDuration: 0.18, fallDuration: 0.16 },
+    { peak: 0.0055, riseDuration: 0.1, fallDuration: 0.09 },
+  ] as const,
+  postBounceHold: 0.28,
 } as const;
 
 export const PRESENTATION_REVEAL = {
@@ -112,8 +128,26 @@ export const PRESENTATION_REVEAL = {
   slideEase: "power3.inOut",
   titleStagger: 0.042,
   titleDuration: 0.78,
-  /** Beat after landing before slide + title (seconds). */
-  revealDelay: 0.18,
+  /** Extra beat after bounce hold before slide + title (seconds). */
+  revealDelay: 0.12,
+  /** Type stretches and pulls left with the camera slide (motion-smear feel). */
+  titleDrag: {
+    blockX: -56,
+    blockScaleX: 1.22,
+    blockSkewX: -5,
+    /** Stretch each glyph away from the gap (not inward). */
+    charScaleX: [1.14, 1.14] as const,
+    gapFrom: "0.14em",
+    gapTo: "0.32em",
+    mobile: {
+      blockX: -32,
+      blockScaleX: 1.14,
+      blockSkewX: -4,
+      charScaleX: [1.1, 1.1] as const,
+      gapFrom: "0.12em",
+      gapTo: "0.26em",
+    },
+  },
 } as const;
 
 export const HERO_CAMERA = {
@@ -131,8 +165,8 @@ export const LENS_TRANSITION = {
   phaseDuration: {
     /** Yaw right until the lens barrel points at the viewer. */
     faceLens: 3.2,
-    /** Dolly into the lens opening (rotation held). */
-    zoomIntoLens: 2.8,
+    /** Dolly through the hood until the portal fills the screen. */
+    zoomIntoLens: 3.4,
     /** Hold the 3D lens frame — hero ends before the DOM photo overlay. */
     holdAtLens: 1.0,
   },
@@ -147,14 +181,15 @@ export const LENS_TRANSITION = {
     /** Slight height offset above the lens center (eye-line feel). */
     cameraOffsetY: 0.03,
   },
-  /** Step 2 — dolly until the full portal image fits in frame (no crop). */
+  /** Step 2 — dolly until the black portal fills the viewport. */
   zoomIntoLens: {
-    cameraFov: 26,
+    cameraFov: 24,
     cameraOffsetY: 0,
-    /** Fit inside lens (full photo visible in the hood). */
-    fitPadding: 1.04,
-    /** Cover fill during the last part of the 3D zoom (<1 = closer). */
-    fillOvershoot: 0.78,
+    fitPadding: 1.02,
+    /** <1 pulls the camera closer so the portal covers the screen (< hood). */
+    fillOvershoot: 0.56,
+    /** After this fraction of the zoom phase, push from fit → full fill. */
+    fillStartT: 0.22,
   },
 } as const;
 
@@ -162,7 +197,7 @@ export const LENS_TRANSITION = {
 export const LENS_SEQUENCE_FX = {
   bokehScale: 2.65,
   focalLength: 0.028,
-  dofResolution: 480,
+  dofResolution: 768,
   focusRangeMin: 0.08,
   focusRangeMax: 2.4,
   vignetteDarknessMax: 0.92,

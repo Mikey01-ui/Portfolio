@@ -7,6 +7,7 @@ import { useThree } from "@react-three/fiber";
 import type { Group } from "three";
 
 import { CAMERA_DROP_ANIMATION } from "@/components/hero-scene/constants";
+import { resetSubjectDropTransform } from "@/hooks/heroPresentation/dropBounce";
 import { addCameraDropPhase } from "@/hooks/heroPresentation/phases";
 
 gsap.registerPlugin(useGSAP);
@@ -49,7 +50,7 @@ export function useCameraDropTimeline(
         defaults: { ease: "none" },
         onUpdate: () => invalidate(),
         onComplete: () => {
-          subject.position.y = restY;
+          resetSubjectDropTransform(subject, restY);
           invalidate();
         },
       });

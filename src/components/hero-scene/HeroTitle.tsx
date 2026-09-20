@@ -12,7 +12,7 @@ export const HeroTitle = forwardRef<HTMLDivElement>(function HeroTitle(_, ref) {
       <div ref={ref} className="opacity-0" data-hero-root>
         <div
           data-hero-block
-          className="w-full max-w-[min(100%,56rem)] text-center sm:max-w-[min(56rem,62vw)] sm:text-right"
+          className="w-full max-w-[min(100%,56rem)] will-change-transform text-center sm:max-w-[min(56rem,62vw)] sm:text-right"
         >
           <div
             data-hero-accent
@@ -23,7 +23,11 @@ export const HeroTitle = forwardRef<HTMLDivElement>(function HeroTitle(_, ref) {
             aria-label={COMPANY_TITLE}
           >
             <span className="sr-only">{COMPANY_TITLE}</span>
-            <span aria-hidden className="inline-flex flex-wrap justify-center gap-[0.04em] sm:justify-end">
+            <span
+              data-hero-char-row
+              aria-hidden
+              className="relative inline-flex flex-wrap justify-center gap-[0.14em] will-change-transform sm:justify-end sm:gap-[0.16em]"
+            >
               {characters.map((character, index) => (
                 <span
                   key={`${character}-${index}`}
@@ -35,12 +39,6 @@ export const HeroTitle = forwardRef<HTMLDivElement>(function HeroTitle(_, ref) {
               ))}
             </span>
           </h1>
-          <p
-            data-hero-tagline
-            className="mt-5 font-[family-name:var(--font-inter)] text-[clamp(0.7rem,1.45vw,0.95rem)] font-medium uppercase text-[#8fa3bc]"
-          >
-            Motion · Light · Story
-          </p>
         </div>
       </div>
     </div>

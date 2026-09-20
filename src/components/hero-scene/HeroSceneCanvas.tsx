@@ -54,9 +54,7 @@ export function HeroSceneCanvas({
         frameloop={SCENE_PERFORMANCE.frameloop}
         dpr={dpr}
         gl={{
-          antialias:
-            !SCENE_PERFORMANCE.enablePostProcessing &&
-            !SCENE_PERFORMANCE.enableLensSequenceFx,
+          antialias: true,
           alpha: false,
           powerPreference: "high-performance",
           toneMapping: ACESFilmicToneMapping,

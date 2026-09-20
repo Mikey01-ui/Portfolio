@@ -1,12 +1,18 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { Inter } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   weight: ["500", "700"],
+});
+
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+  weight: ["600", "700"],
 });
 
 const manuka = localFont({
@@ -23,9 +29,8 @@ const manuka = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "NANAGANABA | Cinematic Hero",
-  description:
-    "Scroll-driven 3D camera hero — lens sequence built with Next.js, React Three Fiber, and GSAP.",
+  title: "YO",
+  description: "Scroll-driven 3D camera hero — lens sequence with GSAP.",
 };
 
 export const viewport: Viewport = {
@@ -42,7 +47,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${manuka.variable} h-full antialiased`}
+      className={`${inter.variable} ${manuka.variable} ${montserrat.variable} h-full antialiased`}
     >
       <body className="min-h-full overflow-x-clip bg-black font-sans text-white antialiased">
         {children}

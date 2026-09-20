@@ -15,10 +15,10 @@ export function useResponsiveCanvasDpr(): number {
 
     const sync = () => {
       if (mobileQuery.matches) {
-        setDpr(1);
+        setDpr(Math.min(window.devicePixelRatio, 1.5));
         return;
       }
-      setDpr(Math.min(window.devicePixelRatio, 1.5));
+      setDpr(Math.min(window.devicePixelRatio, 2));
     };
 
     sync();

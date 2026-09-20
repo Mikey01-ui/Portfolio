@@ -1,14 +1,14 @@
 {
-  "name": "nanaganaba-hero",
+  "name": "portfolio-hero",
   "version": "1.0.0",
   "private": true,
-  "description": "NANAGANABA — scroll-driven 3D vintage camera hero",
+  "description": "Portfolio — scroll-driven 3D vintage camera hero",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Mikey01-ui/V2.git"
+    "url": "https://github.com/Mikey01-ui/Portfolio.git"
   },
-  "homepage": "https://github.com/Mikey01-ui/V2",
+  "homepage": "https://github.com/Mikey01-ui/Portfolio",
   "engines": {
     "node": "22.x"
   },

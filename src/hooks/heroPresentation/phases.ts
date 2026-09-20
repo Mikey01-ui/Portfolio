@@ -5,54 +5,26 @@ import {
   CAMERA_DROP_ANIMATION,
   PRESENTATION_REVEAL,
 } from "@/components/hero-scene/constants";
+import { addCameraDropBounces } from "@/hooks/heroPresentation/dropBounce";
 
 type DropPhaseConfig = {
-  startY: number;
-  restY: number;
+  startY?: number;
+  restY?: number;
 };
 
 export function addCameraDropPhase(
   timeline: gsap.core.Timeline,
   subject: Group,
-  config: DropPhaseConfig = CAMERA_DROP_ANIMATION,
+  config: DropPhaseConfig = {},
 ): void {
-  const { startY, restY } = config;
+  const restY = config.restY ?? CAMERA_DROP_ANIMATION.restY;
+  const startY = config.startY ?? CAMERA_DROP_ANIMATION.startY;
 
-  subject.position.y = startY;
-
-  timeline
-    .addLabel("drop", 0)
-    .fromTo(
-      subject.position,
-      { y: startY },
-      {
-        y: restY - 0.028,
-        duration: 1.08,
-        ease: "power3.in",
-      },
-      "drop",
-    )
-    .addLabel("impact", ">")
-    .to(
-      subject.position,
-      {
-        y: restY + 0.04,
-        duration: 0.16,
-        ease: "power2.out",
-      },
-      "impact",
-    )
-    .addLabel("settle", ">")
-    .to(
-      subject.position,
-      {
-        y: restY,
-        duration: 0.44,
-        ease: "power3.out",
-      },
-      "settle",
-    )
-    .addLabel("dropComplete", ">");
+  addCameraDropBounces(timeline, subject, {
+    ...CAMERA_DROP_ANIMATION,
+    restY,
+    startY,
+  });
 }
 
 type SlideAndTitlePhaseOptions = {
@@ -73,6 +45,16 @@ export function addSlideAndTitlePhase(
   const chars = titleRoot.querySelectorAll<HTMLElement>("[data-hero-char]");
   const tagline = titleRoot.querySelector<HTMLElement>("[data-hero-tagline]");
   const accent = titleRoot.querySelector<HTMLElement>("[data-hero-accent]");
+  const titleBlock = titleRoot.querySelector<HTMLElement>("[data-hero-block]");
+  const charRow = titleRoot.querySelector<HTMLElement>("[data-hero-char-row]");
+
+  const isWideLayout =
+    typeof window !== "undefined" &&
+    window.matchMedia("(min-width: 640px)").matches;
+  const drag = isWideLayout
+    ? PRESENTATION_REVEAL.titleDrag
+    : PRESENTATION_REVEAL.titleDrag.mobile;
+  const dragOrigin = isWideLayout ? "100% 50%" : "50% 100%";
 
   stage.position.x = stageStartX;
 
@@ -107,8 +89,64 @@ export function addSlideAndTitlePhase(
         ease: "power3.out",
       },
       "reveal+=0.2",
-    )
-    .fromTo(
+    );
+
+  if (titleBlock) {
+    gsap.set(titleBlock, { transformOrigin: dragOrigin });
+    timeline.fromTo(
+      titleBlock,
+      { x: 0, scaleX: 1, skewX: 0 },
+      {
+        x: drag.blockX,
+        scaleX: drag.blockScaleX,
+        skewX: drag.blockSkewX,
+        duration: slideDuration,
+        ease: slideEase,
+      },
+      "reveal",
+    );
+  }
+
+  if (charRow) {
+    gsap.set(charRow, { gap: drag.gapFrom });
+    timeline.fromTo(
+      charRow,
+      { gap: drag.gapFrom },
+      {
+        gap: drag.gapTo,
+        duration: slideDuration,
+        ease: slideEase,
+      },
+      "reveal",
+    );
+  }
+
+  chars.forEach((char, index) => {
+    const scaleX = drag.charScaleX[index] ?? drag.charScaleX.at(-1) ?? 1;
+    const isFirst = index === 0;
+    const isLast = index === chars.length - 1;
+    const charOrigin =
+      isFirst && !isLast
+        ? "100% 50%"
+        : isLast && !isFirst
+          ? "0% 50%"
+          : "50% 50%";
+
+    gsap.set(char, { transformOrigin: charOrigin });
+    timeline.fromTo(
+      char,
+      { scaleX: 1 },
+      {
+        scaleX,
+        duration: slideDuration * 0.92,
+        ease: slideEase,
+      },
+      "reveal+=0.12",
+    );
+  });
+
+  if (tagline) {
+    timeline.fromTo(
       tagline,
       { opacity: 0, x: 28, letterSpacing: "0.38em" },
       {
@@ -119,6 +157,8 @@ export function addSlideAndTitlePhase(
         ease: "power2.out",
       },
       "reveal+=0.55",
-    )
-    .addLabel("complete", ">");
+    );
+  }
+
+  timeline.addLabel("complete", ">");
 }
