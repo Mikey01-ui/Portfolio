@@ -1,4 +1,11 @@
-export const CAMERA_MODEL_PATH = "/models/1930s_movie_camera.web.glb";
+const getBasePath = () => {
+  if (typeof window !== "undefined" && window.location.pathname.startsWith("/camera")) {
+    return "/camera";
+  }
+  return process.env.NEXT_PUBLIC_BASE_PATH || "";
+};
+
+export const CAMERA_MODEL_PATH = `${getBasePath()}/models/1930s_movie_camera.web.glb`;
 
 /** Y rotation so the camera's right side faces the viewer (was showing left). */
 export const MODEL_Y_ROTATION = Math.PI;
