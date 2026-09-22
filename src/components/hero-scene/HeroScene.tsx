@@ -94,14 +94,10 @@ export function HeroScene() {
           }}
         />
 
-        {/* Top bar indicators in Miltomy box style */}
-        <div className="relative z-10 flex items-center justify-between w-full">
+        {/* Top bar in Miltomy box style */}
+        <div className="relative z-10 flex items-center justify-start w-full">
           <div className="border border-[#222222] bg-[#111111] rounded-md px-3 py-1.5 text-[10px] sm:text-[11px] font-mono tracking-widest uppercase text-[#888888]">
             WebGL Showcase
-          </div>
-          <div className="inline-flex items-center gap-2 border border-[#c8ff00]/30 bg-[#c8ff00]/10 rounded-md px-3 py-1.5 text-[10px] sm:text-[11px] font-mono font-semibold text-[#c8ff00]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#c8ff00] shadow-[0_0_8px_#c8ff00] animate-pulse" />
-            DESKTOP EXPERIENCE ONLY
           </div>
         </div>
 
