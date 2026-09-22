@@ -166,3 +166,16 @@ body.hero-scene-page {
   overflow-x: clip;
   max-width: 100vw;
 }
+
+/* Anti-Copy & Anti-Inspection Rules */
+img, video, canvas, svg {
+  -webkit-user-drag: none;
+  user-drag: none;
+  -webkit-touch-callout: none;
+}
+
+@media print {
+  html, body {
+    display: none !important;
+  }
+}
