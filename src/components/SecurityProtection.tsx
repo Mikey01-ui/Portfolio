@@ -1,8 +1,21 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export function SecurityProtection() {
+  const [isBlackoutActive, setIsBlackoutActive] = useState(false);
+  const blackoutTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const triggerBlackout = (durationMs = 2500) => {
+    setIsBlackoutActive(true);
+    if (blackoutTimeoutRef.current) {
+      clearTimeout(blackoutTimeoutRef.current);
+    }
+    blackoutTimeoutRef.current = setTimeout(() => {
+      setIsBlackoutActive(false);
+    }, durationMs);
+  };
+
   useEffect(() => {
     const handleContextMenu = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
@@ -23,6 +36,17 @@ export function SecurityProtection() {
         /Mac|iPod|iPhone|iPad/.test(navigator.platform);
       const cmdOrCtrl = isMac ? e.metaKey : e.ctrlKey;
       const key = e.key.toLowerCase();
+
+      // Screenshot combinations
+      const isScreenshotAttempt =
+        e.key === "PrintScreen" ||
+        (cmdOrCtrl &&
+          e.shiftKey &&
+          (key === "3" || key === "4" || key === "5" || key === "6" || key === "s"));
+
+      if (isScreenshotAttempt) {
+        triggerBlackout(2500);
+      }
 
       if (
         e.key === "F12" ||
@@ -52,8 +76,19 @@ export function SecurityProtection() {
       window.removeEventListener("contextmenu", handleContextMenu);
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("dragstart", handleDragStart);
+      if (blackoutTimeoutRef.current) {
+        clearTimeout(blackoutTimeoutRef.current);
+      }
     };
   }, []);
 
-  return null;
+  if (!isBlackoutActive) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-[99999999] bg-black"
+      style={{ backgroundColor: "#000000" }}
+      onClick={() => setIsBlackoutActive(false)}
+    />
+  );
 }
